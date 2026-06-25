@@ -6,10 +6,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-permissions:
-  contents: read
-  id-token: write  # Required for requesting the OIDC token from GitHub
-
 jobs:
   sync-to-hub:
     runs-on: ubuntu-latest
@@ -30,13 +26,15 @@ jobs:
 
       - name: Deploy to Hugging Face Hub
         env:
-          HF_OIDC_RESOURCE: iftiaj/Reel-to-MP3-Batch-Downloader
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           python -c "
+          import os
           from huggingface_hub import upload_folder
           upload_folder(
               folder_path='.',
               repo_id='iftiaj/Reel-to-MP3-Batch-Downloader',
-              repo_type='space'
+              repo_type='space',
+              token=os.getenv('HF_TOKEN')
           )
           "
