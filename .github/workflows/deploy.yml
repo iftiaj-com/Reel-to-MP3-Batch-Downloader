@@ -15,13 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           lfs: true
 
       - name: Install Python & HF Hub CLI
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -34,5 +34,5 @@ jobs:
 
       - name: Push to Hugging Face
         run: |
-          git remote add hf https://huggingface.co/spaces/iftiaj-com/Reel-to-MP3-Batch-Downloader
+          git remote add hf https://huggingface.co/spaces/iftiaj/Reel-to-MP3-Batch-Downloader
           git push --force hf main
