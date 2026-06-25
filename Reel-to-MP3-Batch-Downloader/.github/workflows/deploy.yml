@@ -15,25 +15,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           lfs: true
 
       - name: Install Python & HF Hub CLI
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
       - name: Install Hugging Face Hub
         run: pip install --upgrade huggingface_hub
 
-      - name: Authenticate to Hugging Face
-        # Exchange OIDC token for a temporary session token
-        run: huggingface-cli login --token-oidc
-
-      - name: Push to Hugging Face
+      - name: Deploy to Hugging Face Hub
+        env:
+          HF_OIDC_RESOURCE: iftiaj/Reel-to-MP3-Batch-Downloader
         run: |
-          git remote add hf https://huggingface.co/spaces/iftiaj-com/Reel-to-MP3-Batch-Downloader
-          git push --force hf main
-
+          python -c "
+          from huggingface_hub import upload_folder
+          upload_folder(
+              folder_path='.',
+              repo_id='iftiaj/Reel-to-MP3-Batch-Downloader',
+              repo_type='space'
+          )
+          "
