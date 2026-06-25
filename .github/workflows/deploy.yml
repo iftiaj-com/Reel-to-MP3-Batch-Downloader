@@ -28,11 +28,13 @@ jobs:
       - name: Install Hugging Face Hub
         run: pip install --upgrade huggingface_hub
 
-      - name: Authenticate to Hugging Face
-        # Exchange OIDC token for a temporary session token
-        run: huggingface-cli login --token-oidc
-
-      - name: Push to Hugging Face
+      - name: Deploy to Hugging Face Hub
         run: |
-          git remote add hf https://huggingface.co/spaces/iftiaj/Reel-to-MP3-Batch-Downloader
-          git push --force hf main
+          python -c "
+          from huggingface_hub import upload_folder
+          upload_folder(
+              folder_path='.',
+              repo_id='iftiaj/Reel-to-MP3-Batch-Downloader',
+              repo_type='space'
+          )
+          "
