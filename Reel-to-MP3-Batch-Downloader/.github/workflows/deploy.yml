@@ -3,7 +3,6 @@ name: Sync to Hugging Face Hub
 on:
   push:
     branches: [main]
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -21,20 +20,16 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Hugging Face Hub
-        run: pip install --upgrade huggingface_hub
+      - name: Install dependencies
+        run: |
+          pip install huggingface_hub
 
-      - name: Deploy to Hugging Face Hub
+      - name: Force-with-lease push to Hugging Face Hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          python -c "
-          import os
-          from huggingface_hub import upload_folder
-          upload_folder(
-              folder_path='.',
-              repo_id='iftiaj/Reel-to-MP3-Batch-Downloader',
-              repo_type='space',
-              token=os.getenv('HF_TOKEN')
-          )
-          "
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          huggingface-cli repo create my-model --token $HF_TOKEN --yes
+          git remote add hf https://user:$HF_TOKEN@huggingface.co/iftiaj/Reel-to-MP3-Batch-Downloader
+          git push hf main --force-with-lease
