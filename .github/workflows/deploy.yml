@@ -24,12 +24,15 @@ jobs:
         run: |
           pip install huggingface_hub
 
-      - name: Force push to Hugging Face Hub
+      - name: Force-with-lease push to Hugging Face Hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          huggingface-cli repo create my-model --token $HF_TOKEN --yes
+          # Create repo if it doesn't exist
+          hf repo create my-model --token $HF_TOKEN --yes
+          # Add Hugging Face remote
           git remote add hf https://user:$HF_TOKEN@huggingface.co/iftiaj/Reel-to-MP3-Batch-Downloader
-          git push hf main --force
+          # Push with safer force option
+          git push hf main --force-with-lease
