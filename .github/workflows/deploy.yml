@@ -15,4 +15,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HUGGING_FACE_TOKEN }}
-        run: git push --force https://HF_USERNAME:$HUGGING_FACE_TOKEN@huggingface.co/spaces/iftiaj/Reel-to-MP3-Batch-Downloader main
+        run: git push --force https://HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/iftiaj/Reel-to-MP3-Batch-Downloader main
