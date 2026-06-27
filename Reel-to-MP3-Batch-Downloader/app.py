@@ -284,8 +284,9 @@ elif st.session_state.step == "processing":
         # Download attempt loop with proxy rotation
         downloaded_path = None
         for attempt in range(1, MAX_RETRIES + 1):
-            proxy = rotator.current()
-            if attempt > 1:
+            if attempt == 1:
+                proxy = None
+            else:
                 backoff = RETRY_BASE * (2 ** (attempt - 2)) + random.uniform(0, 2)
                 log_area.warning(f"Retry {attempt}/{MAX_RETRIES} using proxy... Waiting {backoff:.1f}s")
                 time.sleep(backoff)
@@ -295,7 +296,7 @@ elif st.session_state.step == "processing":
             downloaded_path = download_one(url, temp_dir, proxy, log_area)
             if downloaded_path:
                 break
-            else:
+            elif attempt > 1:
                 rotator.rotate()
         
         if downloaded_path:
