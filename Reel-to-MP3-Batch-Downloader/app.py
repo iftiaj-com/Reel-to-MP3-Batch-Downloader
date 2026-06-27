@@ -9,6 +9,7 @@ import streamlit as st
 import yt_dlp
 import requests
 from pathlib import Path
+from typing import Optional
 
 # ─────────────────────────── CONFIGURATION ────────────────────────────────────
 
@@ -69,7 +70,7 @@ class ProxyRotator:
         self._proxies = fetch_free_proxies()
         self._index = 0
 
-    def current(self) -> str | None:
+    def current(self) -> Optional[str]:
         if self._proxies:
             return self._proxies[self._index % len(self._proxies)]
         return None
@@ -94,7 +95,7 @@ _USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0",
 ]
 
-def download_one(url: str, output_folder: str, proxy: str | None, status_box) -> str | None:
+def download_one(url: str, output_folder: str, proxy: Optional[str], status_box) -> Optional[str]:
     """
     Downloads one reel, converts it to MP3, and returns the path to the MP3 file.
     Returns None on failure.
